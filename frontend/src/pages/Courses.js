@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+// import popup from "../components/popup";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);

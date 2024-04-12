@@ -15,8 +15,10 @@ import NotFound from "./components/NotFound";
 import Error from "./components/Error";
 import AdminHome from "./admin/AdminHome";
 import UpdateCourse from "./admin/UpdateCourse";
-import Buycourse  from "./pages/Buycourse";
-
+import CardPayment from "./pages/CardPayment";
+import UpiPayment from "./pages/UpiPayment";
+import BankPayment from "./pages/BankPayment";
+import PayPalPayment from "./pages/PayPalPayment";
 
 const App = () => {
   return (
@@ -55,8 +57,10 @@ const router = createBrowserRouter([
       { path: "/cart", element: <Cart /> },
       { path: "/admin", element: <AdminHome /> },
       { path: "/updatecourse/:id", element: <UpdateCourse /> },
-      { path: "/buycourse", element: <Buycourse/> },
-
+      { path: "/credit-card-payment", element: <CardPayment /> },
+      { path: "/upi-payment", element: <UpiPayment /> },
+      { path: "/bank-transfer-payment", element: <BankPayment /> },
+      { path: "/paypal-payment", element: <PayPalPayment /> },
 
       {
         path: "*",
