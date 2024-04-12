@@ -4,9 +4,6 @@ import { useParams } from 'react-router-dom';
 
 const UpdateCourse = () => {
     const[inputCourse, setinputCourse]=useState({
-    // name:"",
-    // email:"",
-    // password:"",
 });
 
 

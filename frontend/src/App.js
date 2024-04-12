@@ -15,6 +15,8 @@ import NotFound from "./components/NotFound";
 import Error from "./components/Error";
 import AdminHome from "./admin/AdminHome";
 import UpdateCourse from "./admin/UpdateCourse";
+import Buycourse  from "./pages/Buycourse";
+
 
 const App = () => {
   return (
@@ -53,6 +55,9 @@ const router = createBrowserRouter([
       { path: "/cart", element: <Cart /> },
       { path: "/admin", element: <AdminHome /> },
       { path: "/updatecourse/:id", element: <UpdateCourse /> },
+      { path: "/buycourse", element: <Buycourse/> },
+
+
       {
         path: "*",
         element: <NotFound />,

@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const { Schema, model } = require('mongoose');
 // const bcrypt = require("bcrypt");
 // const CourseModel = require("./models/courese");
 const PORT = 3030;
@@ -27,8 +28,15 @@ mongoose
     course_price: { type: Number, required: true }
  })
 
+ const cartSchema = new mongoose.Schema({
+    courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    quantity: { type: Number, default: 1 }
+ })
+
 //create coures model
 const Course = mongoose.model("Course",courseSchema)
+//create cart module
+const Cart = mongoose.model("Cart",cartSchema)
 
 //course
 app.post("/add-course", async(req,res)=>{
@@ -76,8 +84,45 @@ app.get('/readallcourses', async (req, res) => {
   }
 });
  
+//add to cart
+app.post('/cart/:courseId', async (req, res) => {
+  const { courseId } = req.params;
+  try {
+    const existingCartItem = await Cart.findOne({ courseId });
+    if (existingCartItem) {
+      // Course already exists in the cart
+      return res.status(400).send({ message: 'Course already in cart' });
+    }
+
+    const cartItem = new Cart({ courseId });
+    const addedItem = await cartItem.save();
+    res.status(201).send(addedItem);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
 
 
+// show cart item
+app.get('/showcartitem', async (req, res) => {
+  try {
+    const cartItems = await Cart.find({}).populate('courseId');
+    res.status(200).send(cartItems);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// remove from cart 
+app.delete('/removefromcart/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Cart.findByIdAndDelete(id);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 //start server
   app.listen(PORT, () =>{

@@ -17,9 +17,23 @@ const Courses = () => {
     }
   };
 
+// add to cart 
+const addtocart = async (courseId) => {
+  try {
+    const res = await axios.post(`http://localhost:3030/cart/${courseId}`);
+    if (res.status === 201) {
+      alert('Course added to cart');
+    } 
+  } catch (e) {
+    console.error('An error occurred:', e);
+  }
+};
+
+
   return (
     <div className="courses">
-      {courses.map((item) => (
+      {
+        courses.map((item) => (
         <div key={item.id} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
             <img className="rounded-t-lg" src={item?.img} alt="course image" />
@@ -57,6 +71,13 @@ const Courses = () => {
                 />
               </svg>
             </a>
+            <button
+            onClick={() => addtocart(item._id)}
+              className="inline-flex items-center mx-4 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Add to Cart
+             
+            </button>
           </div>
         </div>
       ))}
