@@ -34,8 +34,8 @@ const Cart = () => {
   };
 
   //continue to payment
-  const [selectedPayment, setSelectedPayment] = useState('');
-//   const history = useHistory();
+  const [selectedPayment, setSelectedPayment] = useState("");
+  //   const history = useHistory();
 
   const handlePaymentOptionChange = (e) => {
     setSelectedPayment(e.target.value);
@@ -43,24 +43,23 @@ const Cart = () => {
 
   const handleContinueToPayment = () => {
     switch (selectedPayment) {
-      case 'credit_card':
-        window.location = '/credit-card-payment';
+      case "credit_card":
+        window.location = "/credit-card-payment";
         break;
-      case 'paypal':
-        window.location ='/paypal-payment';
+      case "paypal":
+        window.location = "/paypal-payment";
         break;
-      case 'bank_transfer':
-        window.location ='/bank-transfer-payment';
+      case "bank_transfer":
+        window.location = "/bank-transfer-payment";
         break;
-      case 'upi':
-        window.location ='/upi-payment';
+      case "upi":
+        window.location = "/upi-payment";
         break;
       default:
         // Do something if no payment option is selected
         break;
     }
   };
-
 
   return (
     <div classNameName="cart">
@@ -91,7 +90,7 @@ const Cart = () => {
                         <div className="img-box">
                           <img
                             src={item.courseId.img}
-                            alt="perfume bottle image"
+                            alt="perfume"
                             className="xl:w-[140px]"
                           />
                         </div>
@@ -144,46 +143,46 @@ const Cart = () => {
                   Payment Options
                 </h3>
                 <div className="flex flex-col space-y-2">
-                <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              name="payment"
-              value="credit_card"
-              onChange={handlePaymentOptionChange}
-            />
-            <span className="ml-2">Credit Card</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              name="payment"
-              value="paypal"
-              onChange={handlePaymentOptionChange}
-            />
-            <span className="ml-2">PayPal</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              name="payment"
-              value="bank_transfer"
-              onChange={handlePaymentOptionChange}
-            />
-            <span className="ml-2">Bank Transfer</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              name="payment"
-              value="upi"
-              onChange={handlePaymentOptionChange}
-            />
-            <span className="ml-2">UPI</span>
-          </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      className="form-radio"
+                      name="payment"
+                      value="credit_card"
+                      onChange={handlePaymentOptionChange}
+                    />
+                    <span className="ml-2">Credit Card</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      className="form-radio"
+                      name="payment"
+                      value="paypal"
+                      onChange={handlePaymentOptionChange}
+                    />
+                    <span className="ml-2">PayPal</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      className="form-radio"
+                      name="payment"
+                      value="bank_transfer"
+                      onChange={handlePaymentOptionChange}
+                    />
+                    <span className="ml-2">Bank Transfer</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      className="form-radio"
+                      name="payment"
+                      value="upi"
+                      onChange={handlePaymentOptionChange}
+                    />
+                    <span className="ml-2">UPI</span>
+                  </label>
                 </div>
               </div>
             </>
