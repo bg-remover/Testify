@@ -10,5 +10,8 @@
 
 ### `npm run build`-> to build
 
-### to run backend ndemon index.js
+### to run backend nodemon index.js
+
 ### to open admin panel /abmin
+
+## Screenshots
