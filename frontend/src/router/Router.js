@@ -16,6 +16,7 @@ import CardPayment from "../pages/CardPayment";
 import UpiPayment from "../pages/UpiPayment";
 import BankPayment from "../pages/BankPayment";
 import PayPalPayment from "../pages/PayPalPayment";
+import CourseDetail from "../pages/CourseDetail";
 import App from "../App";
 
 const Router = () => {
@@ -49,6 +50,7 @@ const Router = () => {
         { path: "/upi-payment", element: <UpiPayment /> },
         { path: "/bank-transfer-payment", element: <BankPayment /> },
         { path: "/paypal-payment", element: <PayPalPayment /> },
+        { path: "/course/:id", element: <CourseDetail /> },
 
         {
           path: "*",

@@ -1,16 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { Schema, model } = require('mongoose');
+const path = require("path");
+
+const { Schema, model } = require("mongoose");
+const CourseDetail = require("./models/courseDetail");
+const Course = require("./models/course");
 // const bcrypt = require("bcrypt");
-// const CourseModel = require("./models/courese");
+
 const PORT = 3030;
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
-
-//connect to mongo 
+//connect to mongo
 mongoose
   .connect("mongodb://127.0.0.1:27017/testify")
   .then(() => {
@@ -20,78 +23,92 @@ mongoose
     console.error("MongoDB connection error:", e);
   });
 
-  //create course schema
-  const courseSchema = new mongoose.Schema({
-    img:{type: String },
-    course_name: { type: String, required: true },
-    course_disc: { type: String, required: true },
-    course_price: { type: Number, required: true }
- })
+//create course schema
+const courseSchema = new mongoose.Schema({
+  img: { type: String },
+  course_name: { type: String, required: true },
+  course_disc: { type: String, required: true },
+  course_price: { type: Number, required: true },
+});
 
- const cartSchema = new mongoose.Schema({
-    courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
-    quantity: { type: Number, default: 1 }
- })
+const cartSchema = new mongoose.Schema({
+  courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true },
+  quantity: { type: Number, default: 1 },
+});
 
-//create coures model
-const Course = mongoose.model("Course",courseSchema)
 //create cart module
-const Cart = mongoose.model("Cart",cartSchema)
+const Cart = mongoose.model("Cart", cartSchema);
 
 //course
-app.post("/add-course", async(req,res)=>{
-    try{
-        const{img,course_name,course_disc, course_price} = req.body;
-        const course = new Course({img,course_name,course_disc, course_price});
-        const addcourse = await course.save();
-        res.status(201).send(addcourse);
-    } catch (e){
-        res.status(400).send(e.message);
-    }
-}) 
+app.post("/add-course", async (req, res) => {
+  try {
+    const { img, course_name, course_disc, course_price } = req.body;
+    const course = new Course({ img, course_name, course_disc, course_price });
+    const addcourse = await course.save();
+    res.status(201).send(addcourse);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+});
 
 //update a course
-app.put('/updatecourse/:id', async (req, res) => {
-  try{
-      const id = req.params.id;
-      const course = await Course.findByIdAndUpdate({_id:id},req.body , {new:true} );
-      res.send(course);
-  }catch(e){
-      res.send(e);
-  }   
+app.put("/updatecourse/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const course = await Course.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    res.send(course);
+  } catch (e) {
+    res.send(e);
+  }
 });
 
 // delete course
-app.delete("/deletecourse/:id", async(req,res)=>{
-  try{
-     const id = req.params.id;
-     const course = await Course.findByIdAndDelete({_id:id});
-     res.send(course);
-  }catch(e){
-      res.send(e);
-  }
-})
-
-
-// show courser 
-app.get('/readallcourses', async (req, res) => {
+app.delete("/deletecourse/:id", async (req, res) => {
   try {
-      const courses = await Course.find({});
-      res.send(courses);
-  } catch (error) {
-      console.error('Error fetching courses:', error);
-      res.status(500).send('An error occurred while fetching courses');
+    const id = req.params.id;
+    const course = await Course.findByIdAndDelete({ _id: id });
+    res.send(course);
+  } catch (e) {
+    res.send(e);
   }
 });
- 
+
+// show courser
+app.get("/readallcourses", async (req, res) => {
+  try {
+    const courses = await Course.find({});
+    res.send(courses);
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).send("An error occurred while fetching courses");
+  }
+});
+
+// Define route for fetching course details
+app.get("/course-detail/:id", async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    // Find the course detail by courseId
+    const courseDetail = await CourseDetail.findOne({ courseId });
+    if (!courseDetail) {
+      return res.status(404).send("Course detail not found");
+    }
+    res.send(courseDetail);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //add to cart
-app.post('/cart/:courseId', async (req, res) => {
+app.post("/cart/:courseId", async (req, res) => {
   const { courseId } = req.params;
   try {
     const existingCartItem = await Cart.findOne({ courseId });
     if (existingCartItem) {
       // Course already exists in the cart
-      return res.status(400).send({ message: 'Course already in cart' });
+      return res.status(400).send({ message: "Course already in cart" });
     }
 
     const cartItem = new Cart({ courseId });
@@ -102,19 +119,18 @@ app.post('/cart/:courseId', async (req, res) => {
   }
 });
 
-
 // show cart item
-app.get('/showcartitem', async (req, res) => {
+app.get("/showcartitem", async (req, res) => {
   try {
-    const cartItems = await Cart.find({}).populate('courseId');
+    const cartItems = await Cart.find({}).populate("courseId");
     res.status(200).send(cartItems);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-// remove from cart 
-app.delete('/removefromcart/:id', async (req, res) => {
+// remove from cart
+app.delete("/removefromcart/:id", async (req, res) => {
   const { id } = req.params;
   try {
     await Cart.findByIdAndDelete(id);
@@ -124,7 +140,10 @@ app.delete('/removefromcart/:id', async (req, res) => {
   }
 });
 
+// Serve static files from the 'assets' directory
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
 //start server
-  app.listen(PORT, () =>{
-    console.log(`Server is running on port ${PORT}`);
-  })
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

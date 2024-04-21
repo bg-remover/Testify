@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import popup from "../components/popup";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import CourseCard from "../components/CourseCard";
+import SearchBar from "../components/SearchBar";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   useEffect(() => {
     fetchAllCourses();
@@ -13,75 +16,52 @@ const Courses = () => {
     try {
       const res = await axios.get("http://localhost:3030/readallcourses");
       setCourses(res.data);
+      setFilteredCourses(res.data); // Initially, set filtered courses to all courses
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
   };
 
-// add to cart 
-const addtocart = async (courseId) => {
-  try {
-    const res = await axios.post(`http://localhost:3030/cart/${courseId}`);
-    if (res.status === 201) {
-      alert('Course added to cart');
-    } 
-  } catch (e) {
-    console.error('An error occurred:', e);
-  }
-};
-
+  // add to cart
+  const addtocart = async (courseId) => {
+    try {
+      const res = await axios.post(`http://localhost:3030/cart/${courseId}`);
+      if (res.status === 201) {
+        alert("Course added to cart");
+      }
+    } catch (e) {
+      console.error("An error occurred:", e);
+    }
+  };
+  // Base URL for assets
+  const baseUrl = "http://localhost:3030";
 
   return (
-    <div className="courses">
-      {
-        courses.map((item) => (
-        <div key={item.id} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <a href="#">
-            <img className="rounded-t-lg" src={item?.img} alt="course image" />
-          </a>
-          <div className="p-5">
-            <a href="#">
-              <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {item?.course_name}
-              </h3>
-            </a>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-              {item?.course_disc}
-            </p>
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {item?.course_price}
-            </h5>
-            <a
-              href="#"
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Go to course
-              <svg
-                className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 10"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M1 5h12m0 0L9 1m4 4L9 9"
-                />
-              </svg>
-            </a>
-            <button
-            onClick={() => addtocart(item._id)}
-              className="inline-flex items-center mx-4 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Add to Cart
-             
-            </button>
+    <div>
+      <SearchBar courses={courses} setFilteredCourses={setFilteredCourses} />
+      <div className="flex flex-wrap justify-center mt-8">
+        {filteredCourses.map((item) => (
+          <div
+            key={item.id}
+            className="max-w-sm w-full sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl mx-2 my-4 cursor-pointer"
+          >
+            <Link to={`/course/${item._id}`}>
+              {/* Wrap CourseCard with Link component */}
+              <CourseCard
+                img={`${baseUrl}/${item.img}`} // Concatenate base URL with image path
+                courseName={item.course_name}
+                courseDisc={item.course_disc}
+                author={{
+                  name: "Jonathan Reinink",
+                  avatar: `${baseUrl}/assets/CourseImg/jonathan.jpg`,
+                }}
+                date="Aug 18"
+                addToCart={() => addtocart(item._id)}
+              />
+            </Link>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
