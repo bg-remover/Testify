@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 
 const courseDetailSchema = new mongoose.Schema({
-  courseId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Course",
-  },
+  courseId: String,
+  courseName: String,
   overview: String,
   objectives: [String],
   prerequisites: [String],
